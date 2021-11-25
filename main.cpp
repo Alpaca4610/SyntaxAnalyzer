@@ -12,40 +12,41 @@ std::stack<string> symbol;
 std::stack<int> state;
 std::stack<string> input;
 
-int gotoSheet[16][3] = {{1,  2,  3},
-                        {-1, -1, -1},
-                        {-1, -1, -1},
-                        {-1, -1, -1},
-                        {10, 2,  3},
-                        {-1, -1, -1},
-                        {-1, 11, 3},
-                        {-1, 12, 3},
-                        {-1, -1, 13},
-                        {-1, -1, 14},
-                        {-1, -1, -1},
-                        {-1, -1, -1},
-                        {-1, -1, -1},
-                        {-1, -1, -1},
-                        {-1, -1, -1},
-                        {-1, -1, -1}};
+                    //   E   T   F
+int gotoSheet[16][3] = {{1,  2,  3},//I0
+                        {-1, -1, -1},//I1
+                        {-1, -1, -1},//I2
+                        {-1, -1, -1},//I3
+                        {10, 2,  3},//I4
+                        {-1, -1, -1},//I5
+                        {-1, 11, 3},//I6
+                        {-1, 12, 3},//I7
+                        {-1, -1, 13},//I8
+                        {-1, -1, 14},//I9
+                        {-1, -1, -1},//I10
+                        {-1, -1, -1},//I11
+                        {-1, -1, -1},//I12
+                        {-1, -1, -1},//I13
+                        {-1, -1, -1},//I14
+                        {-1, -1, -1}};//I15
 
-//横坐标：  *   /   (     )   num   +   -   $
-string actionSheet[16][8] = {{"",   "",   "S4", "",    "S5", "",   "",   ""},//0
-                             {"",   "",   "",   "",    "",   "S6", "S7", "ACC"},//1
-                             {"S8", "S9", "",   "R3",  "",   "R3", "R3", "R3"},//2
-                             {"R6", "R6", "",   "R6",  "",   "R6", "R6", "R6"},//3
-                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//4
-                             {"R8", "R8", "R8", "R8",  "R8", "R8", "R8", "R8"},//5
-                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//6
-                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//7
-                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//8
-                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//9
-                             {"",   "",   "",   "S15", "",   "S6", "S7", ""},//10
-                             {"S8", "S9", "",   "R1",  "",   "R1", "R1", "R1"},//11
-                             {"S8", "S9", "",   "R2",  "",   "R2", "R2", "R2"},//12
-                             {"R4", "R4", "R4", "R4",  "",   "R4", "R4", "R4"},//13
-                             {"R5", "R5", "R5", "R5",  "",   "R5", "R5", "R5"},//14
-                             {"R7", "R7", "R7", "R7",  "R7", "R7", "R7", "R7"}//15
+                            // *     /     (     )     num    +     -     $
+string actionSheet[16][8] = {{"",   "",   "S4", "",    "S5", "",   "",   ""},//I0
+                             {"",   "",   "",   "",    "",   "S6", "S7", "ACC"},//I1
+                             {"S8", "S9", "",   "R3",  "",   "R3", "R3", "R3"},//I2
+                             {"R6", "R6", "",   "R6",  "",   "R6", "R6", "R6"},//I3
+                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//I4
+                             {"R8", "R8", "R8", "R8",  "R8", "R8", "R8", "R8"},//I5
+                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//I6
+                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//I7
+                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//I8
+                             {"",   "",   "S4", "",    "S5", "",   "",   ""},//I9
+                             {"",   "",   "",   "S15", "",   "S6", "S7", ""},//I10
+                             {"S8", "S9", "",   "R1",  "",   "R1", "R1", "R1"},//I11
+                             {"S8", "S9", "",   "R2",  "",   "R2", "R2", "R2"},//I12
+                             {"R4", "R4", "R4", "R4",  "",   "R4", "R4", "R4"},//I13
+                             {"R5", "R5", "R5", "R5",  "",   "R5", "R5", "R5"},//I14
+                             {"R7", "R7", "R7", "R7",  "R7", "R7", "R7", "R7"}//I15
 };//"E->E+T", "E->E-T", "E->T", "T->T*F", "T->T/F", "T->F", "F->(E)", "F->num"
 
 void Reduce(int expression_) {
@@ -57,7 +58,7 @@ void Reduce(int expression_) {
             }
             symbol.push("E");
             if (gotoSheet[state.top()][0] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             state.push(gotoSheet[state.top()][0]);
 
             break;
@@ -69,7 +70,7 @@ void Reduce(int expression_) {
             }
             symbol.push("E");
             if (gotoSheet[state.top()][0] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             state.push(gotoSheet[state.top()][0]);
 
             break;
@@ -79,7 +80,7 @@ void Reduce(int expression_) {
             state.pop();
             symbol.push("E");
             if (gotoSheet[state.top()][0] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             state.push(gotoSheet[state.top()][0]);
 
             break;
@@ -91,7 +92,7 @@ void Reduce(int expression_) {
             }
             symbol.push("T");
             if (gotoSheet[state.top()][1] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             state.push(gotoSheet[state.top()][1]);
 
             break;
@@ -103,7 +104,7 @@ void Reduce(int expression_) {
             }
             symbol.push("T");
             if (gotoSheet[state.top()][1] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             state.push(gotoSheet[state.top()][1]);
 
             break;
@@ -112,7 +113,7 @@ void Reduce(int expression_) {
             symbol.pop();
             state.pop();
             if (gotoSheet[state.top()][1] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             symbol.push("T");
             state.push(gotoSheet[state.top()][1]);
 
@@ -125,7 +126,7 @@ void Reduce(int expression_) {
             }
             symbol.push("F");
             if (gotoSheet[state.top()][2] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             state.push(gotoSheet[state.top()][2]);
 
             break;
@@ -134,15 +135,11 @@ void Reduce(int expression_) {
             symbol.pop();
             state.pop();
             if (gotoSheet[state.top()][2] == -1)
-                throw "Goto表中对应项为空";
+                throw "语法分析出现错误：Goto表中对应项为空!";
             symbol.push("F");
             state.push(gotoSheet[state.top()][2]);
 
             break;
-        }
-
-        default: {
-
         }
     }
 }
@@ -218,14 +215,11 @@ void run(string in) {
     cout << "步骤\t\t\t动作\t\t\t\t符号栈\t\t\t\t状态栈\t\t\t待扫描符号栈" << endl;
     while (!input.empty()) {
         step++;
-        if (step == 10) {
-            int foo = 0;//point
-        }
         int nowState = state.top();
         if (input.top() == "*") {
             string nowAction = actionSheet[nowState][0];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -242,7 +236,7 @@ void run(string in) {
         } else if (input.top() == "/") {
             string nowAction = actionSheet[nowState][1];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -261,7 +255,7 @@ void run(string in) {
         else if (input.top() == "(") {
             string nowAction = actionSheet[nowState][2];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -278,7 +272,7 @@ void run(string in) {
         } else if (input.top() == ")") {
             string nowAction = actionSheet[nowState][3];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -295,7 +289,7 @@ void run(string in) {
         } else if (input.top() == "num") {
             string nowAction = actionSheet[nowState][4];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -311,7 +305,7 @@ void run(string in) {
         } else if (input.top() == "+") {
             string nowAction = actionSheet[nowState][5];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -328,7 +322,7 @@ void run(string in) {
         } else if (input.top() == "-") {
             string nowAction = actionSheet[nowState][6];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空!";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -345,7 +339,7 @@ void run(string in) {
         } else if (input.top() == "$") {
             string nowAction = actionSheet[nowState][7];
             if (nowAction == "") {
-                throw "Action表中对应动作为空";
+                throw "语法分析出现错误：Action表中对应动作为空！";
             } else if (nowAction[0] == 'S') {
 
                 string t = string{nowAction[1]} + string{nowAction[2]};
@@ -368,7 +362,12 @@ void run(string in) {
 }
 
 int main() {
-        run("(num-num)+(num/num)+(num*num)");
-
+    try {
+        run("num-num)+(num/num)+(num*num)");
+    }
+    catch(char const* str)
+    {
+        cout << str << endl;
+    }
     return 0;
 }
